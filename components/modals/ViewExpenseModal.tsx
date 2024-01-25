@@ -1,14 +1,16 @@
+import { format } from "date-fns";
+import { toast } from "react-toastify";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 
-import { ModalProps } from "./types";
-import Modal from "./Modal";
 import { ExpensesType } from "@expensestracker/utils/types";
 import { formatCurrency } from "@expensestracker/utils/currency";
+import { DateStringFormat } from "@expensestracker/utils/constants";
+import { ModalProps } from "./types";
+import Modal from "./Modal";
 import { useFinanceContext } from "../../lib/context/financeContext";
 import { useState } from "react";
 import MediumLoader from "../loaders/MediumLoader";
 import SmallLoader from "../loaders/SmallLoader";
-import { toast } from "react-toastify";
 
 interface Props extends ModalProps {
   expense?: ExpensesType;
@@ -66,7 +68,7 @@ const ViewExpenseModal = ({ open, setOpen, expense }: Props) => {
           {expense.items.length ? <h3 className="my-4 text-2xl">Expense History</h3> : <></>}
           {expense.items.map(item => (
             <div key={item.id} className="flex items-center justify-between">
-              <small>{item.createdAt.toISOString()}</small>
+              <small>{format(item.createdAt.toISOString(), DateStringFormat)}</small>
               <p className="flex items-center gap-2">
                 {formatCurrency(item.amount)}
                 <button onClick={() => handleDeleteExpenseItem(item)}>{loading === item.id ? <SmallLoader /> : <DeleteForeverRoundedIcon />}</button>

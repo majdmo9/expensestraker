@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 
 import { IncomeFormInputs } from "@expensestracker/utils/types";
+import { DateStringFormat } from "@expensestracker/utils/constants";
 import { formatCurrency } from "@expensestracker/utils/currency";
 
 import Modal from "./Modal";
@@ -65,7 +67,7 @@ const IncomeModal = ({ open, setOpen }: ModalProps) => {
             <div key={el.id} className="flex justify-between itemms-center">
               <div>
                 <p className="font-semibold">{el.description}</p>
-                <small className="text-xs">{el.createdAt.toISOString()}</small>
+                <small className="text-xs">{format(el.createdAt.toISOString(), DateStringFormat)}</small>
               </div>
               <p className="flex items-center gap-2">
                 {formatCurrency(el.amount)}
