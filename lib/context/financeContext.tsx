@@ -11,6 +11,7 @@ import { useAuthContext } from "./authContext";
 const financeContext = createContext<{
   expenses: ExpensesType[];
   incomeHistory: IncomeDataType[];
+  loadingExpenses: boolean;
   addIncomeItem: (values: IncomeFormInputs) => Promise<void>;
   removeIncomeItem: (id: string) => Promise<void>;
   addExpenseItem: (values: ExpenseFormInputs, category: string) => Promise<void>;
@@ -20,6 +21,7 @@ const financeContext = createContext<{
 }>({
   incomeHistory: [],
   expenses: [],
+  loadingExpenses: false,
   addIncomeItem: async () => {},
   removeIncomeItem: async () => {},
   addExpenseItem: async () => {},
@@ -33,6 +35,7 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
 
   const [incomeHistory, setIncomeHistory] = useState<IncomeDataType[]>([]);
   const [expenses, setExpenses] = useState<ExpensesType[]>([]);
+  const [loadingExpenses, setLoadingExpenses] = useState(false);
 
   const addExpenseItem = async (values: ExpenseFormInputs, category: string) => {
     const expense = expenses.find(el => el.id === category);
@@ -62,7 +65,7 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
     const collectionRef = collection(db, CollectionsEnum.EXPENSES);
     try {
       const docSnap = await addDoc(collectionRef, { uid: user.uid, ...category, items: [], total: 0 });
-      setExpenses(prev => [...prev, { uid: user.uid, id: docSnap.id, ...category } as ExpensesType]);
+      setExpenses(prev => [...prev, { uid: user.uid, id: docSnap.id, ...category, total: 0 } as ExpensesType]);
     } catch (err) {
       console.log(err);
       throw err;
@@ -131,6 +134,7 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
       setIncomeHistory(data as IncomeDataType[]);
     };
     const handleFetchExpenses = async () => {
+      setLoadingExpenses(true);
       const collectionRef = collection(db, CollectionsEnum.EXPENSES);
       const fetchQeury = query(collectionRef, where("uid", "==", user.uid));
       const docsSnap = await getDocs(fetchQeury);
@@ -140,6 +144,7 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
         items: el.data().items.map((item: ExpensesType["items"][0]) => ({ ...item, createdAt: new Date((item.createdAt as any).toMillis()) })),
       }));
       setExpenses(data as ExpensesType[]);
+      setLoadingExpenses(false);
     };
     handleFetchExpenses();
     handleFetchIncome();
@@ -147,7 +152,17 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
 
   return (
     <financeContext.Provider
-      value={{ incomeHistory, expenses, addIncomeItem, removeIncomeItem, addExpenseItem, addCategory, deleteExpenseItem, deleteExpenseCategory }}
+      value={{
+        incomeHistory,
+        expenses,
+        loadingExpenses,
+        addIncomeItem,
+        removeIncomeItem,
+        addExpenseItem,
+        addCategory,
+        deleteExpenseItem,
+        deleteExpenseCategory,
+      }}
     >
       {children}
     </financeContext.Provider>

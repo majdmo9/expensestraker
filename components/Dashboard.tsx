@@ -18,13 +18,14 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = () => {
   const { loading } = useAuthContext();
+  const { expenses, incomeHistory, loadingExpenses } = useFinanceContext();
+
   const [incomeModalOpen, setIncomeModalOpen] = useState(false);
   const [expensesModalOpen, setExpensesModalOpen] = useState(false);
   const [viewExpenseModalOpen, setViewExpenseModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<ExpensesType>();
 
   const [balance, setBalance] = useState(0);
-  const { expenses, incomeHistory } = useFinanceContext();
 
   const handleExpenseItemClick = (expense: ExpensesType) => {
     setSelectedExpense(expense);
@@ -37,7 +38,7 @@ const Dashboard = () => {
     setBalance(tempBalance);
   }, [expenses, incomeHistory]);
 
-  if (loading || !expenses.length) {
+  if (loading || loadingExpenses) {
     return <PageLoader />;
   }
   return (
@@ -58,11 +59,24 @@ const Dashboard = () => {
       <section className="py-6">
         <h3>My Expenses</h3>
         <div className="flex flex-col gap-4 mt-6">
-          {expenses.map(item => (
-            <button key={item.id} className="overflow-hidden rounded-3xl" onClick={() => handleExpenseItemClick(item)}>
-              <ExpenseItem title={item.title} total={item.total} color={item.color} />
-            </button>
-          ))}
+          {expenses.length ? (
+            expenses.map(item => (
+              <button key={item.id} className="overflow-hidden rounded-3xl" onClick={() => handleExpenseItemClick(item)}>
+                <ExpenseItem title={item.title} total={item.total} color={item.color} />
+              </button>
+            ))
+          ) : (
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl text-center mt-10">No expenses yet!</h1>
+              <h3 className="text-lg text-center text-slate-400">
+                You can add expenses buy clicking on the{" "}
+                <button onClick={() => setExpensesModalOpen(true)} className="dark:text-lime-400 text-[#1877F2]">
+                  Expenses
+                </button>{" "}
+                button...
+              </h3>
+            </div>
+          )}
         </div>
       </section>
       <section className="py-6">

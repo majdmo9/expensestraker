@@ -2,6 +2,7 @@
 import Image from "next/image";
 import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
 import { useAuthContext } from "../lib/context/authContext";
+import { scrollToBottom } from "@expensestracker/utils/scrollToBottom";
 
 const Navigation = () => {
   const { user, logout, loading } = useAuthContext();
@@ -16,9 +17,9 @@ const Navigation = () => {
             <small>Hi, {user.displayName}!</small>
           </div>
           <nav className="flex items-center gap-4">
-            <div>
+            <button onClick={scrollToBottom}>
               <LeaderboardRoundedIcon fontSize="large" />
-            </div>
+            </button>
             <div>
               <button className="btn btn-danger" onClick={logout}>
                 Sign out
