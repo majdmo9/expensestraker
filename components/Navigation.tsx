@@ -10,7 +10,7 @@ const Navigation = () => {
       {user && !loading ? (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-[40px] w-[40px] rounded-[50%] bg-white overflow-hidden  border border-lime-400">
+            <div className="h-[40px] w-[40px] rounded-[50%] bg-white overflow-hidden  border dark:border-lime-400 border-[#1877F2]">
               <Image src={user.photoURL as string} width={40} height={40} alt={user.displayName as string} className="object-cover h-full w-full" />
             </div>
             <small>Hi, {user.displayName}!</small>
