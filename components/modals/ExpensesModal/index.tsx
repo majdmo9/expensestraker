@@ -40,7 +40,7 @@ const ExpensesModal = ({ open, setOpen }: ModalProps) => {
       <div className="input-group">
         <div className="flex justify-between items-center collapse-title">
           <button
-            className={showAddCategory ? "text-red-500" : "dark:text-lime-400 text-[#1877f2]"}
+            className={showAddCategory ? "text-red-500" : "dark:text-emerald-400 text-[#1877f2]"}
             onClick={() => setShowAddCategory(prev => !prev)}
           >
             {showAddCategory ? "Close" : "+ New Category"}

@@ -70,7 +70,7 @@ const Dashboard = () => {
               <h1 className="text-3xl text-center mt-10">No expenses yet!</h1>
               <h3 className="text-lg text-center text-slate-400">
                 You can add expenses buy clicking on the{" "}
-                <button onClick={() => setExpensesModalOpen(true)} className="dark:text-lime-400 text-[#1877F2]">
+                <button onClick={() => setExpensesModalOpen(true)} className="dark:text-emerald-400 text-[#1877F2]">
                   Expenses
                 </button>{" "}
                 button...

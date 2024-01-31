@@ -5,7 +5,7 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 210, 210, 210;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,11 +42,14 @@ body {
   .btn-danger {
     @apply text-white bg-red-500 border-red-500;
   }
+  .btn-edit {
+    @apply text-white dark:bg-blue-500 bg-blue-700 border-blue-700 dark:border-blue-500;
+  }
   .btn-primary {
-    @apply bg-[#1877f2] dark:bg-slate-700 dark:border-slate-700 dark:text-lime-400 text-white;
+    @apply bg-[#1877f2] dark:bg-slate-700 dark:border-slate-700 dark:text-emerald-400 text-white;
   }
   .btn-primary-outline {
-    @apply dark:border-lime-400 dark:text-lime-400 border-[#1877f2] text-[#1877f2];
+    @apply dark:border-emerald-400 dark:text-emerald-400 border-[#1877f2] text-[#1877f2];
   }
   .input-group {
     @apply flex flex-col gap-4 min-w-full;

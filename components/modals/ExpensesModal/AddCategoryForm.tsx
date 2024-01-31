@@ -26,7 +26,7 @@ const AddCategoryForm = () => {
   return (
     <form onSubmit={handleSubmit(handleAddCategory)}>
       <div className="flex items-center justify-between gap-4">
-        <input type="text" placeholder="Category Title" {...register("title")} />
+        <input type="text" required placeholder="Category Title" {...register("title")} />
         <label htmlFor="color" className="text-nowrap">
           Pick Color
         </label>

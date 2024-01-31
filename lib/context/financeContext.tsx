@@ -18,6 +18,7 @@ const financeContext = createContext<{
   addCategory: (category: AddCategoryFormInputs) => Promise<void>;
   deleteExpenseItem: (expense: Pick<ExpensesType, "items" | "total">, category: string) => Promise<void>;
   deleteExpenseCategory: (category: string) => Promise<void>;
+  editExpenseCategory: (category: ExpensesType, categoryName: string) => Promise<void>;
 }>({
   incomeHistory: [],
   expenses: [],
@@ -28,6 +29,7 @@ const financeContext = createContext<{
   addCategory: async () => {},
   deleteExpenseItem: async () => {},
   deleteExpenseCategory: async () => {},
+  editExpenseCategory: async () => {},
 });
 
 const FinanceContextProvider = ({ children }: { children: React.ReactElement }) => {
@@ -123,6 +125,22 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
     }
   };
 
+  const editExpenseCategory = async (category: ExpensesType, newCategoryTitle: string) => {
+    try {
+      const docRef = doc(db, CollectionsEnum.EXPENSES, category.id);
+      await updateDoc(docRef, { ...category, title: newCategoryTitle });
+      setExpenses(prev => {
+        const prevExpenses = [...prev];
+        const expenseCategoryIdx = prevExpenses.findIndex(el => el.id === category.id);
+        prevExpenses[expenseCategoryIdx].title = newCategoryTitle;
+        return prevExpenses;
+      });
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -162,6 +180,7 @@ const FinanceContextProvider = ({ children }: { children: React.ReactElement }) 
         addCategory,
         deleteExpenseItem,
         deleteExpenseCategory,
+        editExpenseCategory,
       }}
     >
       {children}

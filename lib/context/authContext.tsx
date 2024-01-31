@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect } from "react";
 import { AuthStateHook, useAuthState } from "react-firebase-hooks/auth";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut, signInAnonymously } from "firebase/auth";
 
 import { useRouter } from "next/navigation";
 import { auth } from "../firebase";
@@ -12,11 +12,13 @@ const authContext = createContext<{
   loading: AuthStateHook["1"];
   googleLoginHandler: () => Promise<void>;
   logout: () => Promise<void>;
+  anonymousLoginHandler: () => Promise<void>;
 }>({
   user: null,
   loading: false,
   googleLoginHandler: async () => {},
   logout: async () => {},
+  anonymousLoginHandler: async () => {},
 });
 
 const AuthContextProvider = ({ children }: { children: React.ReactElement }) => {
@@ -27,6 +29,15 @@ const AuthContextProvider = ({ children }: { children: React.ReactElement }) => 
   const googleLoginHandler = async () => {
     try {
       signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const anonymousLoginHandler = async () => {
+    try {
+      signInAnonymously(auth);
     } catch (err) {
       console.log(err);
       throw err;
@@ -45,7 +56,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactElement }) => 
     }
   }, [user]);
 
-  return <authContext.Provider value={{ user, loading, logout, googleLoginHandler }}>{children}</authContext.Provider>;
+  return <authContext.Provider value={{ user, loading, logout, googleLoginHandler, anonymousLoginHandler }}>{children}</authContext.Provider>;
 };
 
 export default AuthContextProvider;
